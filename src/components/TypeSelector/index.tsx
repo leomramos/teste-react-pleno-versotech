@@ -1,99 +1,37 @@
 import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
-import { Fragment } from 'react'
+import { ArrowPathIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
+import { Fragment, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { cn, formatName } from '../../lib'
-import { IPokemonType } from '../../types'
-
-const types: IPokemonType[] = [
-  {
-    name: 'normal',
-    url: 'https://pokeapi.co/api/v2/type/1/',
-  },
-  {
-    name: 'fighting',
-    url: 'https://pokeapi.co/api/v2/type/2/',
-  },
-  {
-    name: 'flying',
-    url: 'https://pokeapi.co/api/v2/type/3/',
-  },
-  {
-    name: 'poison',
-    url: 'https://pokeapi.co/api/v2/type/4/',
-  },
-  {
-    name: 'ground',
-    url: 'https://pokeapi.co/api/v2/type/5/',
-  },
-  {
-    name: 'rock',
-    url: 'https://pokeapi.co/api/v2/type/6/',
-  },
-  {
-    name: 'bug',
-    url: 'https://pokeapi.co/api/v2/type/7/',
-  },
-  {
-    name: 'ghost',
-    url: 'https://pokeapi.co/api/v2/type/8/',
-  },
-  {
-    name: 'steel',
-    url: 'https://pokeapi.co/api/v2/type/9/',
-  },
-  {
-    name: 'fire',
-    url: 'https://pokeapi.co/api/v2/type/10/',
-  },
-  {
-    name: 'water',
-    url: 'https://pokeapi.co/api/v2/type/11/',
-  },
-  {
-    name: 'grass',
-    url: 'https://pokeapi.co/api/v2/type/12/',
-  },
-  {
-    name: 'electric',
-    url: 'https://pokeapi.co/api/v2/type/13/',
-  },
-  {
-    name: 'psychic',
-    url: 'https://pokeapi.co/api/v2/type/14/',
-  },
-  {
-    name: 'ice',
-    url: 'https://pokeapi.co/api/v2/type/15/',
-  },
-  {
-    name: 'dragon',
-    url: 'https://pokeapi.co/api/v2/type/16/',
-  },
-  {
-    name: 'dark',
-    url: 'https://pokeapi.co/api/v2/type/17/',
-  },
-  {
-    name: 'fairy',
-    url: 'https://pokeapi.co/api/v2/type/18/',
-  },
-  {
-    name: 'unknown',
-    url: 'https://pokeapi.co/api/v2/type/10001/',
-  },
-  {
-    name: 'shadow',
-    url: 'https://pokeapi.co/api/v2/type/10002/',
-  },
-]
-
-export const TypeSelector = ({
-  curType,
+import { type AppDispatch } from '../../store'
+import {
+  fetchTypes,
+  getCurType,
+  getTypes,
+  getTypesStatus,
   setCurType,
-}: {
-  curType: IPokemonType | null
-  setCurType: React.Dispatch<React.SetStateAction<IPokemonType | null>>
-}) => {
+} from '../../store/slices'
+
+export const TypeSelector = () => {
+  const dispatch: AppDispatch = useDispatch()
+
+  const types = useSelector(getTypes)
+  const curType = useSelector(getCurType)
+  const typesStatus = useSelector(getTypesStatus)
+
+  useEffect(() => {
+    if (typesStatus === 'idle') dispatch(fetchTypes())
+  }, [dispatch, typesStatus])
+
+  if (typesStatus === 'loading') {
+    return (
+      <ArrowPathIcon
+        className='my-auto h-5 w-5 animate-spin'
+        aria-hidden='true'
+      />
+    )
+  }
+
   return (
     <div className='flex items-center justify-between'>
       {Boolean(curType) && (
@@ -101,7 +39,7 @@ export const TypeSelector = ({
           <button
             type='button'
             className='text-gray-500'
-            onClick={() => setCurType(null)}
+            onClick={() => dispatch(setCurType(null))}
           >
             Clear
           </button>
@@ -141,7 +79,7 @@ export const TypeSelector = ({
                     <Menu.Item key={type.name}>
                       {({ active }) => (
                         <button
-                          onClick={() => setCurType(type)}
+                          onClick={() => dispatch(setCurType(type))}
                           className={cn([
                             'w-full text-left px-4 py-2 text-sm font-medium text-gray-900',
                             {

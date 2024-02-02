@@ -1,10 +1,6 @@
-import { useState } from 'react'
 import { Pokemons, Search, TypeSelector } from './components'
-import { IPokemonType } from './types'
 
 export default function App() {
-  const [curType, setCurType] = useState<IPokemonType | null>(null)
-
   return (
     <div className='mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8 pb-12'>
       <div className='py-24'>
@@ -26,7 +22,7 @@ export default function App() {
           Pokemon filters
         </h2>
 
-        <TypeSelector curType={curType} setCurType={setCurType} />
+        <TypeSelector />
       </section>
 
       <Pokemons />
