@@ -11,6 +11,7 @@ import {
   getTypesStatus,
   setCurType,
 } from '../../store/slices'
+import { IPokemonType } from '../../types'
 
 export const TypeSelector = () => {
   const dispatch: AppDispatch = useDispatch()
@@ -32,6 +33,10 @@ export const TypeSelector = () => {
     )
   }
 
+  const handleTypeChange = (newType: IPokemonType | null) => {
+    dispatch(setCurType(newType))
+  }
+
   return (
     <div className='flex items-center justify-between'>
       {Boolean(curType) && (
@@ -39,7 +44,7 @@ export const TypeSelector = () => {
           <button
             type='button'
             className='text-gray-500'
-            onClick={() => dispatch(setCurType(null))}
+            onClick={() => handleTypeChange(null)}
           >
             Clear
           </button>
@@ -79,7 +84,7 @@ export const TypeSelector = () => {
                     <Menu.Item key={type.name}>
                       {({ active }) => (
                         <button
-                          onClick={() => dispatch(setCurType(type))}
+                          onClick={() => handleTypeChange(type)}
                           className={cn([
                             'w-full text-left px-4 py-2 text-sm font-medium text-gray-900',
                             {
