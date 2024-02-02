@@ -1,12 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
-import { IPokemonType } from '../../types'
+import type { IAsyncSlice, IPokemonType } from '../../types'
 
-interface ITypesSlice {
-  status: 'idle' | 'loading' | 'succeded' | 'failed'
+interface ITypesSlice extends IAsyncSlice {
   curType: null | IPokemonType
   types: IPokemonType[]
-  error: null | Error
 }
 
 const initialState: ITypesSlice = {
@@ -16,16 +14,19 @@ const initialState: ITypesSlice = {
   error: null,
 }
 
-export const fetchTypes = createAsyncThunk('types/fetchTypes', async () => {
-  try {
-    const data = await fetch('https://pokeapi.co/api/v2/type').then(res =>
-      res.json()
-    )
-    return data.results
-  } catch (err) {
-    return err
+export const fetchTypes = createAsyncThunk(
+  'types/fetchTypes',
+  async (_, thunkAPI) => {
+    try {
+      const data = await fetch('https://pokeapi.co/api/v2/type').then(res =>
+        res.json()
+      )
+      return data.results
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err)
+    }
   }
-})
+)
 
 export const typesSlice = createSlice({
   name: 'types',
@@ -41,8 +42,8 @@ export const typesSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(fetchTypes.fulfilled, (state, action) => {
-        state.status = 'succeded'
         state.types = action.payload
+        state.status = 'succeeded'
       })
       .addCase(fetchTypes.rejected, state => {
         state.status = 'failed'

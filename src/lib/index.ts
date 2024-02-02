@@ -11,3 +11,6 @@ import { twMerge } from 'tailwind-merge'
 
 // Combines multiple sets of class values and returns a merged class string
 export const cn = (classes: ClassValue[]) => twMerge(clsx(classes))
+
+export const fetchData = async (url: string | URL) =>
+  await fetch(url).then(res => res.json())

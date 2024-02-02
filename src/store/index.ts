@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { typesReducer } from './slices'
+import { pokemonsReducer, typesReducer } from './slices'
 
 export const store = configureStore({
   reducer: {
     types: typesReducer,
+    pokemons: pokemonsReducer,
   },
 })
 

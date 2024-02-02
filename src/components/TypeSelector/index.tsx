@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { cn, formatName } from '../../lib'
 import { type AppDispatch } from '../../store'
 import {
+  fetchPokemons,
   fetchTypes,
   getCurType,
   getTypes,
   getTypesStatus,
   setCurType,
 } from '../../store/slices'
-import { IPokemonType } from '../../types'
+import type { IPokemonType } from '../../types'
 
 export const TypeSelector = () => {
   const dispatch: AppDispatch = useDispatch()
@@ -23,6 +24,10 @@ export const TypeSelector = () => {
   useEffect(() => {
     if (typesStatus === 'idle') dispatch(fetchTypes())
   }, [dispatch, typesStatus])
+
+  useEffect(() => {
+    dispatch(fetchPokemons(curType?.url))
+  }, [dispatch, curType])
 
   if (typesStatus === 'loading') {
     return (
