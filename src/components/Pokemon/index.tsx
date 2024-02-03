@@ -105,7 +105,7 @@ export const Pokemon = () => {
                           setCurTab(tab)
                         }}
                         className={cn([
-                          'flex whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium capitalize',
+                          'flex whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium capitalize cursor-pointer',
                           {
                             'border-gray-900 text-gray-950':
                               curTab.name === tab.name,
