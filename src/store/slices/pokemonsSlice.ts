@@ -1,15 +1,17 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '..'
 import { fetchData } from '../../lib'
-import type { IAsyncSlice, IPokemon } from '../../types'
+import type { IAsyncSlice, IPokemon } from '../../lib/types'
 
 interface IPokemonsSlice extends IAsyncSlice {
   pokemons: IPokemon[]
+  selectedPokemon: IPokemon | null
 }
 
 const initialState: IPokemonsSlice = {
   status: 'idle',
   pokemons: [],
+  selectedPokemon: null,
   error: null,
 }
 
@@ -34,6 +36,9 @@ export const pokemonsSlice = createSlice({
     setPokemons: (state, action: PayloadAction<IPokemon[]>) => {
       state.pokemons = action.payload
     },
+    setSelectedPokemon: (state, action: PayloadAction<IPokemon | null>) => {
+      state.selectedPokemon = action.payload
+    },
   },
   extraReducers: builder =>
     builder
@@ -52,7 +57,9 @@ export const pokemonsSlice = createSlice({
 export const getPokemons = (state: RootState) => state.pokemons.pokemons
 export const getPokemonsStatus = (state: RootState) => state.pokemons.status
 export const getPokemonsError = (state: RootState) => state.pokemons.error
+export const getSelectedPokemon = (state: RootState) =>
+  state.pokemons.selectedPokemon
 
-export const { setPokemons } = pokemonsSlice.actions
+export const { setPokemons, setSelectedPokemon } = pokemonsSlice.actions
 
 export const pokemonsReducer = pokemonsSlice.reducer

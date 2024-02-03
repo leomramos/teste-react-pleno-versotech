@@ -1,4 +1,5 @@
 export * from './Pagination'
+export * from './Pokemon'
 export * from './Pokemons'
 export * from './Search'
 export * from './TypeSelector'

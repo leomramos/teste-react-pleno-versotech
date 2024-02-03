@@ -3,6 +3,7 @@ import { ArrowPathIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import { Fragment } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { cn, formatName } from '../../lib'
+import type { IPokemonType } from '../../lib/types'
 import { type AppDispatch } from '../../store'
 import {
   fetchPokemons,
@@ -11,7 +12,6 @@ import {
   getTypesStatus,
   setCurType,
 } from '../../store/slices'
-import type { IPokemonType } from '../../types'
 
 export const TypeSelector = () => {
   const dispatch: AppDispatch = useDispatch()

@@ -1,12 +1,19 @@
 import { ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { formatName } from '../../lib'
-import { getLimit, getPage, getPokemonsStatus } from '../../store/slices'
-import type { IPokemon } from '../../types'
+import type { IPokemon } from '../../lib/types'
+import { AppDispatch } from '../../store'
+import {
+  getLimit,
+  getPage,
+  getPokemonsStatus,
+  setSelectedPokemon,
+} from '../../store/slices'
 
 export const Pokemons = ({ pokemons }: { pokemons: IPokemon[] }) => {
+  const dispatch: AppDispatch = useDispatch()
   const page = useSelector(getPage)
   const limit = useSelector(getLimit)
   const pokemonsStatus = useSelector(getPokemonsStatus)
@@ -16,6 +23,10 @@ export const Pokemons = ({ pokemons }: { pokemons: IPokemon[] }) => {
   const paginatedPokemons = useMemo(() => {
     return pokemons.slice(offset, offset + limit)
   }, [pokemons, offset, limit])
+
+  const handleSelectPokemon = (pokemon: IPokemon) => {
+    dispatch(setSelectedPokemon(pokemon))
+  }
 
   if (pokemonsStatus === 'idle' || pokemonsStatus === 'loading') {
     return (
@@ -54,7 +65,11 @@ export const Pokemons = ({ pokemons }: { pokemons: IPokemon[] }) => {
     >
       <AnimatePresence mode='popLayout'>
         {paginatedPokemons.map((pokemon: IPokemon) => (
-          <motion.li layout key={pokemon.name}>
+          <motion.li
+            layout
+            key={pokemon.name}
+            onClick={() => handleSelectPokemon(pokemon)}
+          >
             <PokemonCard {...pokemon} />
           </motion.li>
         ))}
