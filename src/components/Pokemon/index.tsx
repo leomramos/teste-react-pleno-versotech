@@ -3,7 +3,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { cn, fetchData, formatName } from '../../lib'
-import { IPokemon } from '../../lib/types'
+import { IPokemon, IPokemonDetailed } from '../../lib/types'
 import { AppDispatch } from '../../store'
 import { getSelectedPokemon, setSelectedPokemon } from '../../store/slices'
 
@@ -16,7 +16,7 @@ const tabs = [
 export const Pokemon = () => {
   const dispatch: AppDispatch = useDispatch()
   const selectedPokemon: IPokemon | null = useSelector(getSelectedPokemon)
-  const [pokemon, setPokemon] = useState({})
+  const [pokemon, setPokemon] = useState<IPokemonDetailed | null>(null)
 
   const [curTab, setCurTab] = useState(tabs[0])
   const [isShiny, setIsShiny] = useState(false)
@@ -35,7 +35,9 @@ export const Pokemon = () => {
 
   useEffect(() => {
     if (selectedPokemon) {
+      setPokemon(null)
       setIsShiny(false)
+      setCurTab(tabs[0])
       fetchPokemon()
     }
   }, [fetchPokemon, selectedPokemon])
@@ -151,7 +153,7 @@ export const Pokemon = () => {
                               },
                             ])}
                           >
-                            {pokemon[tab.name]?.length}
+                            {pokemon && pokemon[tab.name]?.length}
                           </span>
                         }
                       </a>
@@ -159,21 +161,27 @@ export const Pokemon = () => {
                   </nav>
 
                   <dl className='mt-8 grid gap-x-2 gap-y-4 grid-cols-2 sm:grid-cols-3 min-h-48 max-h-64 overflow-auto'>
-                    {pokemon[curTab.name]?.map((item, i) => (
-                      <div
-                        key={i}
-                        className='flex h-fit flex-col-reverse justify-center items-center border-gray-300 border-b pb-1.5'
-                      >
-                        <dt className='text-xs text-nowrap leading-7 text-gray-700 capitalize'>
-                          {item[curTab.key].name.replace('-', ' ')}
-                        </dt>
-                        {item.base_stat?.toString() ? (
-                          <dd className='text-md font-semibold tracking-tight text-gray-900'>
-                            {item.base_stat}
-                          </dd>
-                        ) : null}
-                      </div>
-                    ))}
+                    {pokemon &&
+                      pokemon[curTab.name]?.map((item, i) => (
+                        <div
+                          key={i}
+                          className={cn([
+                            'flex h-fit flex-col-reverse justify-center items-center border-gray-300 border-b pb-1.5',
+                            {
+                              'opacity-50': item.is_hidden,
+                            },
+                          ])}
+                        >
+                          <dt className='text-xs text-nowrap leading-7 text-gray-700 capitalize'>
+                            {item[curTab.key].name.replace('-', ' ')}
+                          </dt>
+                          {item.base_stat?.toString() ? (
+                            <dd className='text-md font-semibold tracking-tight text-gray-900'>
+                              {item.base_stat}
+                            </dd>
+                          ) : null}
+                        </div>
+                      ))}
                   </dl>
                 </div>
               </Dialog.Panel>
