@@ -3,11 +3,12 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { cn, fetchData, formatName } from '../../lib'
-import { IPokemon, IPokemonDetailed } from '../../lib/types'
-import { AppDispatch } from '../../store'
+import type { IInfoTab, IPokemon, IPokemonDetailed } from '../../lib/types'
+import type { AppDispatch } from '../../store'
 import { getSelectedPokemon, setSelectedPokemon } from '../../store/slices'
+import { Tab, TabInfo } from './Tabs'
 
-const tabs = [
+const tabs: IInfoTab[] = [
   { name: 'stats', key: 'stat' },
   { name: 'abilities', key: 'ability' },
   { name: 'moves', key: 'move' },
@@ -25,14 +26,18 @@ export const Pokemon = () => {
     dispatch(setSelectedPokemon(null))
   }
 
+  // Fetches detailed information about the selected Pokemon
   const fetchPokemon = useCallback(async () => {
     if (selectedPokemon?.url) {
       const data = await fetchData(selectedPokemon.url)
       setPokemon(data)
+
+      // Checks a 10% chance for the Pokemon to be shiny
       setIsShiny(Math.random() < 0.1)
     }
   }, [setPokemon, selectedPokemon?.url])
 
+  // Resets the state and fetches the new Pokemon when the selected Pokemon changes
   useEffect(() => {
     if (selectedPokemon) {
       setPokemon(null)
@@ -90,10 +95,13 @@ export const Pokemon = () => {
                   <img
                     className='mx-auto h-32 w-32 flex-shrink-0 rounded-full object-fill'
                     src={
-                      pokemon?.sprites &&
-                      pokemon.sprites[isShiny ? 'front_shiny' : 'front_default']
+                      pokemon?.sprites
+                        ? pokemon.sprites[
+                            isShiny ? 'front_shiny' : 'front_default'
+                          ]
+                        : ''
                     }
-                    alt='Pokemon Sprite'
+                    alt={`${pokemon?.name} sprite`}
                   />
                   <h3
                     className={cn([
@@ -121,67 +129,23 @@ export const Pokemon = () => {
                     aria-label='Tabs'
                   >
                     {tabs.map(tab => (
-                      <a
+                      <Tab
                         key={tab.name}
-                        onClick={e => {
-                          e.preventDefault()
-                          setCurTab(tab)
-                        }}
-                        className={cn([
-                          'flex whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium capitalize cursor-pointer',
-                          {
-                            'border-gray-900 text-gray-950':
-                              curTab.name === tab.name,
-                            'border-yellow-500':
-                              curTab.name === tab.name && isShiny,
-                            'border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700':
-                              curTab.name !== tab.name,
-                          },
-                        ])}
-                        aria-current={
-                          curTab.name === tab.name ? 'page' : undefined
-                        }
-                      >
-                        {tab.name}
-                        {
-                          <span
-                            className={cn([
-                              'ml-1 rounded-full py-0.5 px-2 text-xs font-medium inline-block',
-                              {
-                                'bg-gray-200/30 text-gray-900': curTab === tab,
-                                'bg-gray-200/50 text-gray-700': curTab !== tab,
-                              },
-                            ])}
-                          >
-                            {pokemon && pokemon[tab.name]?.length}
-                          </span>
-                        }
-                      </a>
+                        tab={tab}
+                        curTab={curTab}
+                        setCurTab={setCurTab}
+                        pokemon={pokemon}
+                        isShiny={isShiny}
+                      />
                     ))}
                   </nav>
 
                   <dl className='mt-8 grid gap-x-2 gap-y-4 grid-cols-2 sm:grid-cols-3 min-h-48 max-h-64 overflow-auto'>
-                    {pokemon &&
-                      pokemon[curTab.name]?.map((item, i) => (
-                        <div
-                          key={i}
-                          className={cn([
-                            'flex h-fit flex-col-reverse justify-center items-center border-gray-300 border-b pb-1.5',
-                            {
-                              'opacity-50': item.is_hidden,
-                            },
-                          ])}
-                        >
-                          <dt className='text-xs text-nowrap leading-7 text-gray-700 capitalize'>
-                            {item[curTab.key].name.replace('-', ' ')}
-                          </dt>
-                          {item.base_stat?.toString() ? (
-                            <dd className='text-md font-semibold tracking-tight text-gray-900'>
-                              {item.base_stat}
-                            </dd>
-                          ) : null}
-                        </div>
-                      ))}
+                    {pokemon
+                      ? pokemon[curTab.name]?.map((item, i) => (
+                          <TabInfo key={i} content={item} curTab={curTab} />
+                        ))
+                      : null}
                   </dl>
                 </div>
               </Dialog.Panel>

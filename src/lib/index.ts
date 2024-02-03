@@ -14,3 +14,7 @@ export const cn = (classes: ClassValue[]) => twMerge(clsx(classes))
 
 export const fetchData = async (url: string | URL) =>
   await fetch(url).then(res => res.json())
+
+// Validates if page is within limits
+export const validatePage = (page: number, pageCount: number) =>
+  Math.min(Math.max(page, 0), pageCount - 1)

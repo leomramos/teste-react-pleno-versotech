@@ -8,25 +8,28 @@ import {
   TypeSelector,
 } from './components'
 import { useSearchedPokemons } from './lib/hooks'
-import { IPokemon } from './lib/types'
-import { AppDispatch } from './store'
+import type { IPokemon } from './lib/types'
+import type { AppDispatch } from './store'
 import {
   fetchPokemons,
   fetchTypes,
-  getPokemonsStatus,
+  getCurType,
   getTypesStatus,
 } from './store/slices'
 
 export default function App() {
   const dispatch: AppDispatch = useDispatch()
 
-  const pokemonsStatus = useSelector(getPokemonsStatus)
+  const selectedType = useSelector(getCurType)
+
+  // Fetches Pokemons on first load and refetches when the selected type changes
+  useEffect(() => {
+    dispatch(fetchPokemons(selectedType?.url))
+  }, [dispatch, selectedType])
+
   const typesStatus = useSelector(getTypesStatus)
 
-  useEffect(() => {
-    if (pokemonsStatus === 'idle') dispatch(fetchPokemons())
-  }, [dispatch, pokemonsStatus])
-
+  // Fetches types if the types status is idle
   useEffect(() => {
     if (typesStatus === 'idle') dispatch(fetchTypes())
   }, [dispatch, typesStatus])

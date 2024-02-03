@@ -4,6 +4,7 @@ import ReactPaginate from 'react-paginate'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../store'
 import { getLimit, getPage, setLimit, setPage } from '../../store/slices'
+import { MobileSelector } from './Mobile'
 
 export const Pagination = ({ pokemonsCount }: { pokemonsCount: number }) => {
   const dispatch: AppDispatch = useDispatch()
@@ -17,9 +18,7 @@ export const Pagination = ({ pokemonsCount }: { pokemonsCount: number }) => {
 
   const [manualPage, setManualPage] = useState(page)
 
-  const validatePage = (page: number) =>
-    Math.min(Math.max(page, 0), pageCount - 1)
-
+  // Sets the new limits whenever the page count changes
   useEffect(() => {
     if (page < 0) {
       dispatch(setPage(0))
@@ -85,24 +84,12 @@ export const Pagination = ({ pokemonsCount }: { pokemonsCount: number }) => {
           nextLinkClassName='relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 select-none'
           disabledLinkClassName='pointer-events-none opacity-50'
         />
-        <div className='flex gap-2 items-center'>
-          <input
-            type='number'
-            value={(manualPage + 1).toString()}
-            min={1}
-            max={pageCount}
-            onChange={({ target: { value } }) =>
-              setManualPage(Math.min(Number(value) - 1, pageCount - 1))
-            }
-            onBlur={({ target: { value } }) =>
-              handlePageChange({ selected: validatePage(Number(value) - 1) })
-            }
-            className='text-xl font-medium text-gray-900 sm:hidden ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-gray-900 py-1 px-1.5 rounded-md'
-          />
-          <span className='sm:hidden text-xl font-medium text-gray-900'>
-            / {pageCount}
-          </span>
-        </div>
+        <MobileSelector
+          pageCount={pageCount}
+          manualPage={manualPage}
+          setManualPage={setManualPage}
+          handlePageChange={handlePageChange}
+        />
       </div>
     </div>
   )

@@ -6,7 +6,6 @@ import { cn, formatName } from '../../lib'
 import type { IPokemonType } from '../../lib/types'
 import { type AppDispatch } from '../../store'
 import {
-  fetchPokemons,
   getCurType,
   getTypes,
   getTypesStatus,
@@ -31,38 +30,33 @@ export const TypeSelector = () => {
 
   const handleTypeChange = (newType: IPokemonType | null) => {
     dispatch(setCurType(newType))
-    dispatch(fetchPokemons(newType?.url))
   }
 
   return (
-    <div className='flex items-center justify-between'>
+    <div className='flex items-center justify-between gap-x-4'>
       {Boolean(curType) && (
-        <div className='pr-6'>
-          <button
-            type='button'
-            className='text-gray-500 hover:text-gray-400'
-            onClick={() => handleTypeChange(null)}
-          >
-            Clear
-          </button>
-        </div>
+        <button
+          type='button'
+          className='text-gray-500 hover:text-gray-400'
+          onClick={() => handleTypeChange(null)}
+        >
+          Clear
+        </button>
       )}
 
       <Menu as='div' className='relative inline-block text-left'>
-        <div>
-          <Menu.Button
-            className={cn([
-              'group inline-flex justify-center items-center text-sm font-medium text-gray-700 hover:text-gray-900',
-              { 'font-bold': Boolean(curType) },
-            ])}
-          >
-            {formatName(curType?.name, 'Type')}
-            <ChevronDownIcon
-              className='-mr-1 ml-1 h-4 w-4 mt-1 flex-shrink-0 text-gray-400 group-hover:text-gray-500'
-              aria-hidden='true'
-            />
-          </Menu.Button>
-        </div>
+        <Menu.Button
+          className={cn([
+            'group inline-flex justify-center items-center text-sm font-medium text-gray-700 hover:text-gray-900',
+            { 'font-bold': Boolean(curType) },
+          ])}
+        >
+          {formatName(curType?.name, 'Type')}
+          <ChevronDownIcon
+            className='-mr-1 ml-1 h-4 w-4 mt-1 flex-shrink-0 text-gray-400 group-hover:text-gray-500'
+            aria-hidden='true'
+          />
+        </Menu.Button>
 
         <Transition
           as={Fragment}
@@ -73,33 +67,49 @@ export const TypeSelector = () => {
           leaveFrom='transform opacity-100 scale-100'
           leaveTo='transform opacity-0 scale-95'
         >
-          <Menu.Items className='absolute right-0 z-20 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none max-h-64 overflow-auto'>
-            <div className='py-1'>
-              {types.map(
-                type =>
-                  type.name !== curType?.name && (
-                    <Menu.Item key={type.name}>
-                      {({ active }) => (
-                        <button
-                          onClick={() => handleTypeChange(type)}
-                          className={cn([
-                            'w-full text-left px-4 py-2 text-sm font-medium text-gray-900',
-                            {
-                              'bg-gray-100': active,
-                            },
-                          ])}
-                        >
-                          {type.name.charAt(0).toUpperCase()}
-                          {type.name.substring(1)}
-                        </button>
-                      )}
-                    </Menu.Item>
-                  )
-              )}
-            </div>
+          <Menu.Items className='absolute right-0 z-20 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none max-h-64 overflow-auto py-1'>
+            {types.map(type => (
+              <TypeItem
+                key={type.name}
+                type={type}
+                curType={curType}
+                handleTypeChange={handleTypeChange}
+              />
+            ))}
           </Menu.Items>
         </Transition>
       </Menu>
     </div>
+  )
+}
+
+const TypeItem = ({
+  type,
+  curType,
+  handleTypeChange,
+}: {
+  type: IPokemonType
+  curType: IPokemonType | null
+  handleTypeChange: (type: IPokemonType | null) => void
+}) => {
+  // Hide if the type is already selected
+  if (type.name === curType?.name) return
+
+  return (
+    <Menu.Item>
+      {({ active }) => (
+        <button
+          onClick={() => handleTypeChange(type)}
+          className={cn([
+            'w-full text-left px-4 py-2 text-sm font-medium text-gray-900',
+            {
+              'bg-gray-100': active,
+            },
+          ])}
+        >
+          {formatName(type.name)}
+        </button>
+      )}
+    </Menu.Item>
   )
 }

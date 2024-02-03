@@ -3,5 +3,10 @@ export interface IAsyncSlice {
   error: null | Error
 }
 
+export type IInfoTab = {
+  name: string
+  key: string
+}
+
 export * from './pokemon'
 export * from './type'
