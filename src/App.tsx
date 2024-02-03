@@ -1,6 +1,31 @@
-import { Pokemons, Search, TypeSelector } from './components'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Pagination, Pokemons, Search, TypeSelector } from './components'
+import { useSearchedPokemons } from './lib/hooks'
+import { AppDispatch } from './store'
+import {
+  fetchPokemons,
+  fetchTypes,
+  getPokemonsStatus,
+  getTypesStatus,
+} from './store/slices'
 
 export default function App() {
+  const dispatch: AppDispatch = useDispatch()
+
+  const pokemonsStatus = useSelector(getPokemonsStatus)
+  const typesStatus = useSelector(getTypesStatus)
+
+  useEffect(() => {
+    if (pokemonsStatus === 'idle') dispatch(fetchPokemons())
+  }, [dispatch, pokemonsStatus])
+
+  useEffect(() => {
+    if (typesStatus === 'idle') dispatch(fetchTypes())
+  }, [dispatch, typesStatus])
+
+  const pokemons = useSearchedPokemons()
+
   return (
     <div className='mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8 pb-12'>
       <div className='py-24'>
@@ -25,7 +50,9 @@ export default function App() {
         <TypeSelector />
       </section>
 
-      <Pokemons />
+      <Pokemons pokemons={pokemons} />
+
+      <Pagination pokemonsCount={pokemons.length} />
     </div>
   )
 }

@@ -1,12 +1,11 @@
 import { Menu, Transition } from '@headlessui/react'
 import { ArrowPathIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
-import { Fragment, useEffect } from 'react'
+import { Fragment } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { cn, formatName } from '../../lib'
 import { type AppDispatch } from '../../store'
 import {
   fetchPokemons,
-  fetchTypes,
   getCurType,
   getTypes,
   getTypesStatus,
@@ -21,14 +20,6 @@ export const TypeSelector = () => {
   const curType = useSelector(getCurType)
   const typesStatus = useSelector(getTypesStatus)
 
-  useEffect(() => {
-    if (typesStatus === 'idle') dispatch(fetchTypes())
-  }, [dispatch, typesStatus])
-
-  useEffect(() => {
-    dispatch(fetchPokemons(curType?.url))
-  }, [dispatch, curType])
-
   if (typesStatus === 'loading') {
     return (
       <ArrowPathIcon
@@ -40,6 +31,7 @@ export const TypeSelector = () => {
 
   const handleTypeChange = (newType: IPokemonType | null) => {
     dispatch(setCurType(newType))
+    dispatch(fetchPokemons(newType?.url))
   }
 
   return (
@@ -48,7 +40,7 @@ export const TypeSelector = () => {
         <div className='pr-6'>
           <button
             type='button'
-            className='text-gray-500'
+            className='text-gray-500 hover:text-gray-400'
             onClick={() => handleTypeChange(null)}
           >
             Clear

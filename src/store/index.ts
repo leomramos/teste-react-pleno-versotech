@@ -1,10 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { pokemonsReducer, typesReducer } from './slices'
+import {
+  paginationReducer,
+  pokemonsReducer,
+  searchReducer,
+  typesReducer,
+} from './slices'
 
 export const store = configureStore({
   reducer: {
     types: typesReducer,
     pokemons: pokemonsReducer,
+    search: searchReducer,
+    pagination: paginationReducer,
   },
 })
 
