@@ -1,5 +1,5 @@
 export interface IAsyncSlice {
-  status: 'idle' | 'loading' | 'succeeded' | 'failed'
+  status: 'idle' | 'loading' | 'fetching' | 'succeeded' | 'failed'
   error: null | Error
 }
 

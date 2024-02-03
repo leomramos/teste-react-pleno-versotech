@@ -1,20 +1,35 @@
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { formatName } from '../../lib'
-import { getLimit, getPage } from '../../store/slices'
+import { getLimit, getPage, getPokemonsStatus } from '../../store/slices'
 import type { IPokemon } from '../../types'
 
 export const Pokemons = ({ pokemons }: { pokemons: IPokemon[] }) => {
   const page = useSelector(getPage)
   const limit = useSelector(getLimit)
+  const pokemonsStatus = useSelector(getPokemonsStatus)
 
   const offset = page * limit
 
   const paginatedPokemons = useMemo(() => {
     return pokemons.slice(offset, offset + limit)
   }, [pokemons, offset, limit])
+
+  if (pokemonsStatus === 'idle' || pokemonsStatus === 'loading') {
+    return (
+      <div className='text-center pb-16'>
+        <ArrowPathIcon className='mx-auto h-12 w-12 text-gray-400 animate-spin' />
+        <h3 className='mt-2 text-sm font-semibold text-gray-900'>
+          Summoning Pokémons
+        </h3>
+        <p className='mt-1 text-sm text-gray-500'>
+          Hold on tight! This won't take long
+        </p>
+      </div>
+    )
+  }
 
   if (pokemons.length === 0) {
     return (

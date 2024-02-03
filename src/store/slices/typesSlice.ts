@@ -39,7 +39,7 @@ export const typesSlice = createSlice({
   extraReducers: builder =>
     builder
       .addCase(fetchTypes.pending, state => {
-        state.status = 'loading'
+        state.status = state.status === 'idle' ? 'loading' : 'fetching'
       })
       .addCase(fetchTypes.fulfilled, (state, action) => {
         state.types = action.payload

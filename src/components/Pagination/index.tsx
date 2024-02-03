@@ -39,7 +39,7 @@ export const Pagination = ({ pokemonsCount }: { pokemonsCount: number }) => {
 
   return (
     <div className='flex flex-1 flex-wrap-reverse items-center justify-between border-t border-gray-200 px-4 py-8 sm:px-6 gap-6'>
-      <div className='flex mx-auto gap-4 items-center flex-wrap justify-center'>
+      <div className='flex max-lg:mx-auto gap-4 items-center flex-wrap justify-center'>
         <p className='text-sm text-gray-700'>
           Showing <span className='font-medium'>{firstIndex}</span> to{' '}
           <span className='font-medium'>{lastIndex}</span> of{' '}
@@ -62,7 +62,7 @@ export const Pagination = ({ pokemonsCount }: { pokemonsCount: number }) => {
           </label>
         </div>
       </div>
-      <div className='mx-auto flex items-center gap-4'>
+      <div className='max-lg:mx-auto flex items-center gap-4'>
         <ReactPaginate
           forcePage={page}
           onPageChange={handlePageChange}

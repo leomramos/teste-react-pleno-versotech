@@ -38,7 +38,7 @@ export const pokemonsSlice = createSlice({
   extraReducers: builder =>
     builder
       .addCase(fetchPokemons.pending, state => {
-        state.status = 'loading'
+        state.status = state.status === 'idle' ? 'loading' : 'fetching'
       })
       .addCase(fetchPokemons.fulfilled, (state, action) => {
         state.pokemons = action.payload
