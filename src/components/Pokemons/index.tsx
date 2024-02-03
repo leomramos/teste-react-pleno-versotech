@@ -20,6 +20,18 @@ export const Pokemons = ({ pokemons }: { pokemons: IPokemon[] }) => {
 
   const offset = page * limit
 
+  /* 
+
+    Optei por implementar a paginação no client-side por três razões:
+
+
+    1. O tamanho máximo do array é de 1302, um número gerenciável para dispositivos modernos.
+    
+    2. Adotar a paginação via API resultaria em um aumento nas requisições. Dado que a API é pública e gratuita, isso adicionaria carga desnecessária ao servidor.
+
+    3. A implementação da paginação da API tornaria a filtragem por nome e tipo mais complexa. Não há suporte para paginação por tipo na API, exigindo, de qualquer forma, a implementação da paginação no client-side. Optar por fazer isso diretamente simplifica o código, evitando complexidade adicional para a mesma funcionalidade.
+
+  */
   const paginatedPokemons = useMemo(() => {
     return pokemons.slice(offset, offset + limit)
   }, [pokemons, offset, limit])
