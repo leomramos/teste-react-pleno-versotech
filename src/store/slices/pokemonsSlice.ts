@@ -19,6 +19,7 @@ export const fetchPokemons = createAsyncThunk<IPokemon[], string | undefined>(
   'types/fetchPokemons',
   async (url = 'https://pokeapi.co/api/v2/pokemon?limit=9999', thunkAPI) => {
     try {
+      // Fetch data and handle response format variations
       const res = await fetchData(url)
       return (
         res.results || res.pokemon.map((p: { pokemon: IPokemon }) => p.pokemon)

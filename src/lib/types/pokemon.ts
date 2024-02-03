@@ -12,7 +12,7 @@ export type IPokemonInfo = Record<string, IInfo> & {
 
 export type IPokemonDetailed = Record<string, IPokemonInfo[]> & {
   id: number
-  name: 'ditto'
+  name: string
   sprites: {
     front_default: string
     front_shiny: string
