@@ -27,7 +27,7 @@ export default function App() {
   const pokemons = useSearchedPokemons()
 
   return (
-    <div className='mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8 pb-12'>
+    <div className='mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8'>
       <div className='py-24'>
         <h1 className='text-4xl font-bold tracking-tight text-gray-900'>
           Pokédex VersoTech
