@@ -1,3 +1,4 @@
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -14,6 +15,20 @@ export const Pokemons = ({ pokemons }: { pokemons: IPokemon[] }) => {
   const paginatedPokemons = useMemo(() => {
     return pokemons.slice(offset, offset + limit)
   }, [pokemons, offset, limit])
+
+  if (pokemons.length === 0) {
+    return (
+      <div className='text-center pb-16'>
+        <MagnifyingGlassIcon className='mx-auto h-12 w-12 text-gray-400' />
+        <h3 className='mt-2 text-sm font-semibold text-gray-900'>
+          No Pokémons found
+        </h3>
+        <p className='mt-1 text-sm text-gray-500'>
+          Try looking for another name or type
+        </p>
+      </div>
+    )
+  }
 
   return (
     <motion.ul
