@@ -69,13 +69,15 @@ export const Pokemon = () => {
               <Dialog.Panel
                 className={cn([
                   'relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:my-8 sm:max-w-sm flex flex-col w-full',
-                  { 'ring-4 ring-inset ring-yellow-500': isShiny },
+                  {
+                    'ring-4 ring-inset ring-yellow-500 bg-amber-50': isShiny,
+                  },
                 ])}
               >
                 <div className='absolute right-0 top-0 pr-4 pt-4'>
                   <button
                     type='button'
-                    className='rounded-md bg-white text-gray-400 hover:text-gray-500'
+                    className='rounded-md text-gray-400 hover:text-gray-500'
                     onClick={deselectPokemon}
                   >
                     <span className='sr-only'>Close</span>
@@ -95,7 +97,7 @@ export const Pokemon = () => {
                     className={cn([
                       'mt-2 text-xl font-medium',
                       {
-                        'text-yellow-500': isShiny,
+                        'text-yellow-500 font-bold': isShiny,
                         'text-gray-900': !isShiny,
                       },
                     ])}
@@ -128,6 +130,8 @@ export const Pokemon = () => {
                           {
                             'border-gray-900 text-gray-950':
                               curTab.name === tab.name,
+                            'border-yellow-500':
+                              curTab.name === tab.name && isShiny,
                             'border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700':
                               curTab.name !== tab.name,
                           },
@@ -142,8 +146,8 @@ export const Pokemon = () => {
                             className={cn([
                               'ml-1 rounded-full py-0.5 px-2 text-xs font-medium inline-block',
                               {
-                                'bg-gray-200 text-gray-900': curTab === tab,
-                                'bg-gray-100 text-gray-900': curTab !== tab,
+                                'bg-gray-200/30 text-gray-900': curTab === tab,
+                                'bg-gray-200/50 text-gray-700': curTab !== tab,
                               },
                             ])}
                           >
