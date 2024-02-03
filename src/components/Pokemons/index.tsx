@@ -18,8 +18,6 @@ export const Pokemons = ({ pokemons }: { pokemons: IPokemon[] }) => {
   const limit = useSelector(getLimit)
   const pokemonsStatus = useSelector(getPokemonsStatus)
 
-  const offset = page * limit
-
   /* 
 
     Optei por implementar a paginação no client-side por três razões:
@@ -32,6 +30,9 @@ export const Pokemons = ({ pokemons }: { pokemons: IPokemon[] }) => {
     3. A implementação da paginação da API tornaria a filtragem por nome e tipo mais complexa. Não há suporte para paginação por tipo na API, exigindo, de qualquer forma, a implementação da paginação no client-side. Optar por fazer isso diretamente simplifica o código, evitando complexidade adicional para a mesma funcionalidade.
 
   */
+
+  const offset = page * limit
+
   const paginatedPokemons = useMemo(() => {
     return pokemons.slice(offset, offset + limit)
   }, [pokemons, offset, limit])
