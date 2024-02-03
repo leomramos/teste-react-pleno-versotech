@@ -20,7 +20,7 @@ export const Pokemons = ({ pokemons }: { pokemons: IPokemon[] }) => {
       layout
       layoutRoot
       role='list'
-      className='grid grid-cols-1 sm:grid-cols-2 gap-6 lg:grid-cols-4'
+      className='grid grid-cols-1 sm:grid-cols-2 gap-6 lg:grid-cols-4 pb-16'
     >
       <AnimatePresence mode='popLayout'>
         {paginatedPokemons.map((pokemon: IPokemon) => (
