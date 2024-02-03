@@ -19,6 +19,7 @@ export const Pokemon = () => {
   const [pokemon, setPokemon] = useState({})
 
   const [curTab, setCurTab] = useState(tabs[0])
+  const [isShiny, setIsShiny] = useState(false)
 
   const deselectPokemon = () => {
     dispatch(setSelectedPokemon(null))
@@ -28,11 +29,13 @@ export const Pokemon = () => {
     if (selectedPokemon?.url) {
       const data = await fetchData(selectedPokemon.url)
       setPokemon(data)
+      setIsShiny(Math.random() < 0.1)
     }
   }, [setPokemon, selectedPokemon?.url])
 
   useEffect(() => {
     if (selectedPokemon) {
+      setIsShiny(false)
       fetchPokemon()
     }
   }, [fetchPokemon, selectedPokemon])
@@ -63,7 +66,12 @@ export const Pokemon = () => {
               leaveFrom='opacity-100 translate-y-0 sm:scale-100'
               leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
             >
-              <Dialog.Panel className='relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:my-8 sm:max-w-sm flex flex-col divide-y divide-gray-200 w-full'>
+              <Dialog.Panel
+                className={cn([
+                  'relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:my-8 sm:max-w-sm flex flex-col w-full',
+                  { 'ring-4 ring-inset ring-yellow-500': isShiny },
+                ])}
+              >
                 <div className='absolute right-0 top-0 pr-4 pt-4'>
                   <button
                     type='button'
@@ -77,10 +85,21 @@ export const Pokemon = () => {
                 <div className='flex flex-1 flex-col p-8'>
                   <img
                     className='mx-auto h-32 w-32 flex-shrink-0 rounded-full object-fill'
-                    src={pokemon?.sprites?.front_default}
-                    alt=''
+                    src={
+                      pokemon?.sprites &&
+                      pokemon.sprites[isShiny ? 'front_shiny' : 'front_default']
+                    }
+                    alt='Pokemon Sprite'
                   />
-                  <h3 className='mt-2 text-xl font-medium text-gray-900'>
+                  <h3
+                    className={cn([
+                      'mt-2 text-xl font-medium',
+                      {
+                        'text-yellow-500': isShiny,
+                        'text-gray-900': !isShiny,
+                      },
+                    ])}
+                  >
                     {formatName(pokemon?.name)}
                   </h3>
                   <ul className={'divide-x divide-gray-500 flex mx-auto mt-2'}>
