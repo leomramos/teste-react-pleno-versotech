@@ -1,5 +1,5 @@
 import { configureStore, EnhancedStore } from '@reduxjs/toolkit'
-import { getLimit, getPage, paginationReducer, setLimit, setPage } from '.'
+import { getLimit, getPage, paginationReducer, setLimit, setPage } from './'
 
 describe('paginationSlice', () => {
   let store: EnhancedStore
