@@ -1,12 +1,14 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { Fragment, useCallback, useEffect, useState } from 'react'
+import { Fragment, useState } from 'react'
+import { useQuery } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
-import { cn, fetchData, formatName } from '../../lib'
+import { cn, fetchData } from '../../lib'
 import type { IInfoTab, IPokemon, IPokemonDetailed } from '../../lib/types'
 import type { AppDispatch } from '../../store'
 import { getSelectedPokemon, setSelectedPokemon } from '../../store/slices'
-import { Tab, TabInfo } from './Tabs'
+import { PokemonContent } from './PokemonContent'
+import { SkeletonLoader } from './SkeletonLoader'
 
 const tabs: IInfoTab[] = [
   { name: 'stats', key: 'stat' },
@@ -17,35 +19,29 @@ const tabs: IInfoTab[] = [
 export const Pokemon = () => {
   const dispatch: AppDispatch = useDispatch()
   const selectedPokemon: IPokemon | null = useSelector(getSelectedPokemon)
-  const [pokemon, setPokemon] = useState<IPokemonDetailed | null>(null)
 
   const [curTab, setCurTab] = useState(tabs[0])
   const [isShiny, setIsShiny] = useState(false)
 
   const deselectPokemon = () => {
     dispatch(setSelectedPokemon(null))
+
+    // Reset the shiny and tab state after the dialog closes
+    setTimeout(() => {
+      setCurTab(tabs[0])
+      setIsShiny(false)
+    }, 300)
   }
 
-  // Fetches detailed information about the selected Pokemon
-  const fetchPokemon = useCallback(async () => {
-    if (selectedPokemon?.url) {
-      const data = await fetchData(selectedPokemon.url)
-      setPokemon(data)
-
-      // Checks a 10% chance for the Pokemon to be shiny
-      setIsShiny(Math.random() < 0.1)
+  // Use useQuery to fetch and cache detailed Pokemon data and handle loading states
+  const { data: pokemon, isFetching } = useQuery<IPokemonDetailed>(
+    ['pokemon', selectedPokemon?.url],
+    async () => await fetchData(selectedPokemon?.url as string),
+    {
+      enabled: Boolean(selectedPokemon?.url), // Only enable the query if a selectedPokemon URL is present
+      keepPreviousData: true,
     }
-  }, [setPokemon, selectedPokemon?.url])
-
-  // Resets the state and fetches the new Pokemon when the selected Pokemon changes
-  useEffect(() => {
-    if (selectedPokemon) {
-      setPokemon(null)
-      setIsShiny(false)
-      setCurTab(tabs[0])
-      fetchPokemon()
-    }
-  }, [fetchPokemon, selectedPokemon])
+  )
 
   return (
     <Transition.Root show={Boolean(selectedPokemon)} as={Fragment}>
@@ -91,63 +87,17 @@ export const Pokemon = () => {
                     <XMarkIcon className='h-6 w-6' aria-hidden='true' />
                   </button>
                 </div>
-                <div className='flex flex-1 flex-col p-8'>
-                  <img
-                    className='mx-auto h-32 w-32 flex-shrink-0 rounded-full object-fill'
-                    src={
-                      pokemon?.sprites
-                        ? pokemon.sprites[
-                            isShiny ? 'front_shiny' : 'front_default'
-                          ]
-                        : ''
-                    }
-                    alt={`${pokemon?.name} sprite`}
+                {isFetching ? (
+                  <SkeletonLoader />
+                ) : (
+                  <PokemonContent
+                    pokemon={pokemon}
+                    isShiny={isShiny}
+                    tabs={tabs}
+                    curTab={curTab}
+                    setCurTab={setCurTab}
                   />
-                  <h3
-                    className={cn([
-                      'mt-2 text-xl font-medium',
-                      {
-                        'text-yellow-500 font-bold': isShiny,
-                        'text-gray-900': !isShiny,
-                      },
-                    ])}
-                  >
-                    {formatName(pokemon?.name)}
-                  </h3>
-                  <ul className={'divide-x divide-gray-500 flex mx-auto mt-2'}>
-                    {pokemon?.types?.map(({ type }) => (
-                      <li
-                        key={type.name}
-                        className='capitalize px-2 font-normal text-sm text-gray-700'
-                      >
-                        {type.name}
-                      </li>
-                    ))}
-                  </ul>
-                  <nav
-                    className='-mb-px mt-4 flex flex-wrap justify-center gap-x-8 mx-auto'
-                    aria-label='Tabs'
-                  >
-                    {tabs.map(tab => (
-                      <Tab
-                        key={tab.name}
-                        tab={tab}
-                        curTab={curTab}
-                        setCurTab={setCurTab}
-                        pokemon={pokemon}
-                        isShiny={isShiny}
-                      />
-                    ))}
-                  </nav>
-
-                  <dl className='mt-8 grid gap-x-2 gap-y-4 grid-cols-2 sm:grid-cols-3 min-h-48 max-h-64 overflow-auto'>
-                    {pokemon
-                      ? pokemon[curTab.name]?.map((item, i) => (
-                          <TabInfo key={i} content={item} curTab={curTab} />
-                        ))
-                      : null}
-                  </dl>
-                </div>
+                )}
               </Dialog.Panel>
             </Transition.Child>
           </div>

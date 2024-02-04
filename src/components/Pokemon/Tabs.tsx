@@ -11,7 +11,7 @@ export const Tab = ({
   tab: IInfoTab
   curTab: IInfoTab
   setCurTab: React.Dispatch<React.SetStateAction<IInfoTab>>
-  pokemon: IPokemonDetailed | null
+  pokemon: IPokemonDetailed | undefined
   isShiny: boolean
 }) => {
   return (
