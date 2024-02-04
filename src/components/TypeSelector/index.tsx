@@ -68,7 +68,7 @@ export const TypeSelector = () => {
           leaveTo='transform opacity-0 scale-95'
         >
           <Menu.Items className='absolute right-0 z-20 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none max-h-64 overflow-auto py-1'>
-            {types.map(type => (
+            {types?.map(type => (
               <TypeItem
                 key={type.name}
                 type={type}
