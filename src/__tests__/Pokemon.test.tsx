@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import configureMockStore, { MockStoreCreator } from 'redux-mock-store'
@@ -44,6 +44,25 @@ describe('Pokemon Modal', () => {
 
         expect(pokemonImage).toBeInTheDocument()
         expect(pokemonTypes).toBeInTheDocument()
+      },
+      { timeout: 100 }
+    )
+  })
+
+  it('should unselected pokemon when closing modal', async () => {
+    const store = renderPokemonModal()
+
+    waitFor(
+      () => {
+        const closeBtn = screen.getByTestId('close-modal')
+        fireEvent.click(closeBtn)
+
+        // Check if the Pokemon is deselected in the store
+        const actions = store.getActions()
+        expect(actions).toContainEqual({
+          type: 'pokemons/setSelectedPokemon',
+          payload: null,
+        })
       },
       { timeout: 100 }
     )

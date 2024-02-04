@@ -16,7 +16,7 @@ const initialState: IPokemonsSlice = {
 }
 
 export const fetchPokemons = createAsyncThunk<IPokemon[], string | undefined>(
-  'types/fetchPokemons',
+  'pokemons/fetchPokemons',
   async (url = 'https://pokeapi.co/api/v2/pokemon?limit=9999', thunkAPI) => {
     try {
       // Fetch data and handle response format variations
@@ -31,7 +31,7 @@ export const fetchPokemons = createAsyncThunk<IPokemon[], string | undefined>(
 )
 
 export const pokemonsSlice = createSlice({
-  name: 'types',
+  name: 'pokemons',
   initialState,
   reducers: {
     setPokemons: (state, action: PayloadAction<IPokemon[]>) => {

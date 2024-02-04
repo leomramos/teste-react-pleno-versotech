@@ -82,6 +82,7 @@ export const Pokemon = () => {
               >
                 <div className='absolute right-0 top-0 pr-4 pt-4'>
                   <button
+                    data-testid='close-modal'
                     type='button'
                     className='rounded-md text-gray-400 hover:text-gray-500'
                     onClick={deselectPokemon}
