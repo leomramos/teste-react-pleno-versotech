@@ -21,17 +21,20 @@ export const Pagination = ({ pokemonsCount }: { pokemonsCount: number }) => {
   // Sets the new limits whenever the page count changes
   useEffect(() => {
     if (page < 0) {
+      setManualPage(0)
       dispatch(setPage(0))
     }
     if (page > pageCount) {
-      dispatch(setPage(Math.max(pageCount - 1, 0)))
+      const newLimit = Math.max(pageCount - 1, 0)
+      setManualPage(newLimit)
+      dispatch(setPage(newLimit))
     }
   }, [dispatch, page, pageCount])
 
   // Invoke when user click or change input to request another page.
   const handlePageChange = (event: { selected: number }) => {
-    dispatch(setPage(event.selected))
     setManualPage(event.selected)
+    dispatch(setPage(event.selected))
   }
 
   const handleLimit = (limit: number) => dispatch(setLimit(limit))
