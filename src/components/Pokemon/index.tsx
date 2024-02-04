@@ -40,6 +40,9 @@ export const Pokemon = () => {
     {
       enabled: Boolean(selectedPokemon?.url), // Only enable the query if a selectedPokemon URL is present
       keepPreviousData: true,
+      onSettled: () => {
+        setIsShiny(Math.random() < 0.1) // 10% chance of being shiny
+      },
     }
   )
 
