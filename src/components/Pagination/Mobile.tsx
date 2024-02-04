@@ -13,6 +13,7 @@ export const MobileSelector = ({
 }) => (
   <div className='flex gap-2 items-center sm:hidden '>
     <input
+      data-testid='mobile-page-selector'
       type='number'
       value={(manualPage + 1).toString()}
       min={1}

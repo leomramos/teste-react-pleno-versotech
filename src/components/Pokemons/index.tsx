@@ -79,6 +79,7 @@ export const Pokemons = ({ pokemons }: { pokemons: IPokemon[] }) => {
       <AnimatePresence mode='popLayout'>
         {paginatedPokemons.map((pokemon: IPokemon) => (
           <motion.li
+            data-testid='pokemon-card'
             layout
             key={pokemon.name}
             onClick={() => handleSelectPokemon(pokemon)}

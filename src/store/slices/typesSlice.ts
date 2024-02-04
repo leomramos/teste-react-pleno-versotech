@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { RootState } from '../..'
-import type { IAsyncSlice, IPokemonType } from '../../../lib/types'
+import { RootState } from '..'
+import type { IAsyncSlice, IPokemonType } from '../../lib/types'
 
 interface ITypesSlice extends IAsyncSlice {
   curType: null | IPokemonType

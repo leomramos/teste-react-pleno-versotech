@@ -49,6 +49,7 @@ export const Pagination = ({ pokemonsCount }: { pokemonsCount: number }) => {
         </p>
         <div className='flex items-center gap-2'>
           <select
+            data-testid='limit-selector'
             id='location'
             name='location'
             className='block rounded-md border-0 py-1.5 pl-3 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-gray-900 text-sm sm:leading-6'
