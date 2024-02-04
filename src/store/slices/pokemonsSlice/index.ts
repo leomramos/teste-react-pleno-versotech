@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from '..'
-import { fetchData } from '../../lib'
-import type { IAsyncSlice, IPokemon } from '../../lib/types'
+import { RootState } from '../..'
+import { fetchData } from '../../../lib'
+import type { IAsyncSlice, IPokemon } from '../../../lib/types'
 
 interface IPokemonsSlice extends IAsyncSlice {
   pokemons: IPokemon[]
