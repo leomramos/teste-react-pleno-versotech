@@ -3,22 +3,24 @@ import { Provider } from 'react-redux'
 import configureMockStore, { MockStoreCreator } from 'redux-mock-store'
 import { Pagination } from '../components'
 
-const initialStoreState = {
+const initialState = {
   pagination: {
     page: 0,
     limit: 20,
   },
 }
 
-const mockStore: MockStoreCreator<ReturnType<() => typeof initialStoreState>> =
+const mockStore: MockStoreCreator<ReturnType<() => typeof initialState>> =
   configureMockStore()
 
+const pokemonsCount = 100
+
 const renderPagination = () => {
-  const store = mockStore(initialStoreState)
+  const store = mockStore(initialState)
 
   render(
     <Provider store={store}>
-      <Pagination pokemonsCount={100} />
+      <Pagination pokemonsCount={pokemonsCount} />
     </Provider>
   )
 
@@ -32,7 +34,7 @@ describe('Pagination Component', () => {
     waitFor(
       () => {
         const updatedCards = screen.queryAllByTestId('pokemon-card')
-        expect(updatedCards.length).toBe(initialStoreState.pagination.limit)
+        expect(updatedCards.length).toBe(initialState.pagination.limit)
       },
       { timeout: 100 }
     ) // Wait for the cards to update
@@ -91,8 +93,8 @@ describe('Pagination Component', () => {
 
     const actions = store.getActions()
     const expectedPage = Math.min(
-      initialStoreState.pagination.page,
-      Math.ceil(100 / newLimit) - 1
+      initialState.pagination.page,
+      Math.ceil(pokemonsCount / newLimit) - 1
     )
 
     expect(actions).toContainEqual({

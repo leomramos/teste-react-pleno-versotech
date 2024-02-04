@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import configureMockStore, { MockStoreCreator } from 'redux-mock-store'
 import { Pokemon } from '../components'
 
-const initialStoreState = {
+const initialState = {
   status: 'idle',
   pokemons: [],
   selectedPokemon: {
@@ -15,11 +15,11 @@ const initialStoreState = {
 }
 
 const queryClient = new QueryClient()
-const mockStore: MockStoreCreator<ReturnType<() => typeof initialStoreState>> =
+const mockStore: MockStoreCreator<ReturnType<() => typeof initialState>> =
   configureMockStore()
 
 const renderPokemonModal = () => {
-  const store = mockStore(initialStoreState)
+  const store = mockStore(initialState)
 
   render(
     <Provider store={store}>
