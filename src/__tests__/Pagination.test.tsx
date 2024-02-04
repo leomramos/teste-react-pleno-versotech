@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import configureMockStore, { MockStoreCreator } from 'redux-mock-store'
-import { Pagination } from '../components/Pagination'
+import { Pagination } from '../components'
 
 const initialStoreState = {
   pagination: {
@@ -13,8 +13,8 @@ const initialStoreState = {
 const mockStore: MockStoreCreator<ReturnType<() => typeof initialStoreState>> =
   configureMockStore()
 
-const renderPagination = (initialState = initialStoreState) => {
-  const store = mockStore(initialState)
+const renderPagination = () => {
+  const store = mockStore(initialStoreState)
 
   render(
     <Provider store={store}>
