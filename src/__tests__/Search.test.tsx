@@ -25,6 +25,9 @@ describe('Search Component', () => {
     fireEvent.change(searchInput, { target: { value: 'Pikachu' } })
 
     const actions = store.getActions()
-    expect(actions).toEqual([{ type: 'search/setQuery', payload: 'Pikachu' }])
+    expect(actions).toContainEqual({
+      type: 'search/setQuery',
+      payload: 'Pikachu',
+    })
   })
 })

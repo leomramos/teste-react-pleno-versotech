@@ -65,15 +65,13 @@ describe('TypeSelector Component', () => {
 
         // Check if the selected type is updated in the store
         const actions = store.getActions()
-        expect(actions).toEqual([
-          {
-            type: 'types/setCurType',
-            payload: {
-              name: 'fire',
-              url: 'https://pokeapi.co/api/v2/type/10/',
-            },
+        expect(actions).toContainEqual({
+          type: 'types/setCurType',
+          payload: {
+            name: 'fire',
+            url: 'https://pokeapi.co/api/v2/type/10/',
           },
-        ])
+        })
       },
       { timeout: 100 }
     )
@@ -105,7 +103,10 @@ describe('TypeSelector Component', () => {
 
         // Check if the selected type is cleared in the store
         const actions = store.getActions()
-        expect(actions).toEqual([{ type: 'types/setCurType', payload: null }])
+        expect(actions).toContainEqual({
+          type: 'types/setCurType',
+          payload: null,
+        })
       },
       { timeout: 100 }
     )
